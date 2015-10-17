@@ -13,9 +13,8 @@ dnl [  --with-demo_ext             Include demo_ext support])
 
 dnl Otherwise use enable:
 
-dnl PHP_ARG_ENABLE(demo_ext, whether to enable demo_ext support,
-dnl Make sure that the comment is aligned:
-dnl [  --enable-demo_ext           Enable demo_ext support])
+PHP_ARG_ENABLE(demo_ext, whether to enable demo_ext support,
+[  --enable-demo_ext           Enable demo_ext support])
 
 if test "$PHP_DEMO_EXT" != "no"; then
   dnl Write more examples of tests here...
@@ -57,7 +56,6 @@ if test "$PHP_DEMO_EXT" != "no"; then
   dnl   -L$DEMO_EXT_DIR/$PHP_LIBDIR -lm
   dnl ])
   dnl
-  dnl PHP_SUBST(DEMO_EXT_SHARED_LIBADD)
-
+  PHP_SUBST(DEMO_EXT_SHARED_LIBADD)
   PHP_NEW_EXTENSION(demo_ext, demo_ext.c, $ext_shared)
 fi
