@@ -32,3 +32,11 @@ And finally build the shared module;
 Inside the `modules` directory you will find the shared module. Move this to
 the modules directory of your php installation and enable the extension by
 modifying your php.ini file.
+
+Using the Extension
+-------------------
+
+A quick way of running the extension is by including the extension using the `-d`
+flag of the interpreter, for example;
+
+    php -dextension=/path/to/demo_ext.so -r 'echo demo_ext_greeting("World");'
