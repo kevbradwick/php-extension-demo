@@ -141,6 +141,35 @@ PHP_FUNCTION(demo_ext_greeting)
 }
 /* }}} */
 
+
+/* {{{
+ * This function takes 2 parameters, the first is mandatory, the second is
+ * optional.
+ *
+ * @param string $name who to say hello to
+ * @param string $greeting the actual greeting, defaults to 'Hello'
+ */
+PHP_FUNCTION(demo_ext_greeting2)
+{
+    char *name,
+         *greeting = NULL,  // optionals must be initialised to a default value
+         *output,
+         *prefix = "Hello";
+    int name_len, greeting_len;
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s|s", &name, &name_len, &greeting, &greeting_len) == FAILURE) {
+        RETURN_NULL();
+    }
+
+    if (greeting != NULL) {
+        prefix = greeting;
+    }
+
+    int len = spprintf(&output, 0, "%s %s!", prefix, name);
+
+    RETURN_STRINGL(output, len, 0);
+}
+
 /* {{{ demo_ext_functions[]
  *
  * Every user visible function must have an entry in demo_ext_functions[].
@@ -148,6 +177,7 @@ PHP_FUNCTION(demo_ext_greeting)
 const zend_function_entry demo_ext_functions[] = {
 	PHP_FE(confirm_demo_ext_compiled,	NULL)		/* For testing, remove later. */
     PHP_FE(demo_ext_greeting, NULL)
+    PHP_FE(demo_ext_greeting2, NULL)
 	PHP_FE_END	/* Must be the last line in demo_ext_functions[] */
 };
 /* }}} */
