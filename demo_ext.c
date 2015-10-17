@@ -46,9 +46,9 @@ PHP_FUNCTION(confirm_demo_ext_compiled)
 	RETURN_STRINGL(strg, len, 0);
 }
 /* }}} */
-/* The previous line is meant for vim and emacs, so it can correctly fold and 
-   unfold functions in source code. See the corresponding marks just before 
-   function definition, where the functions purpose is also documented. Please 
+/* The previous line is meant for vim and emacs, so it can correctly fold and
+   unfold functions in source code. See the corresponding marks just before
+   function definition, where the functions purpose is also documented. Please
    follow this convention for the convenience of others editing your code.
 */
 
@@ -68,7 +68,7 @@ static void php_demo_ext_init_globals(zend_demo_ext_globals *demo_ext_globals)
  */
 PHP_MINIT_FUNCTION(demo_ext)
 {
-	/* If you have INI entries, uncomment these lines 
+	/* If you have INI entries, uncomment these lines
 	REGISTER_INI_ENTRIES();
 	*/
 	return SUCCESS;
@@ -118,12 +118,36 @@ PHP_MINFO_FUNCTION(demo_ext)
 }
 /* }}} */
 
+/* {{{ demo_ext_greeting
+ * Simple function that take one madatory parameter and returns a string. e.g.
+ * demo_ext_greeting('World') will return 'Hello World!'
+ */
+PHP_FUNCTION(demo_ext_greeting)
+{
+    char *name, *output;
+    int name_len, len;
+
+    // get the single parameter, string, that was passed into the function. if
+    // there was a failure in getting it, then PHP will automatically output an
+    // error message so that we don't have to here. We, though have to return
+    // null.
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &name, &name_len) == FAILURE) {
+        RETURN_NULL();
+    }
+
+    len = spprintf(&output, 0, "Hello %s!", name);
+
+    RETURN_STRINGL(output, len, 0);
+}
+/* }}} */
+
 /* {{{ demo_ext_functions[]
  *
  * Every user visible function must have an entry in demo_ext_functions[].
  */
 const zend_function_entry demo_ext_functions[] = {
 	PHP_FE(confirm_demo_ext_compiled,	NULL)		/* For testing, remove later. */
+    PHP_FE(demo_ext_greeting, NULL)
 	PHP_FE_END	/* Must be the last line in demo_ext_functions[] */
 };
 /* }}} */
