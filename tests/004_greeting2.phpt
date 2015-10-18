@@ -4,7 +4,7 @@ Change the greeting
 <?php if (!extension_loaded("demo_ext")) print "skip"; ?>
 --FILE--
 <?php
-echo demo_ext_greeting2('Yo', 'Hey');
+echo greeting_alt('Yo', 'Hey');
 ?>
 --EXPECT--
 Hey Yo!

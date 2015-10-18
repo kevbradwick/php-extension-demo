@@ -4,7 +4,7 @@ Output Hello World!
 <?php if (!extension_loaded("demo_ext")) print "skip"; ?>
 --FILE--
 <?php
-echo demo_ext_greeting('World');
+echo greeting('World');
 ?>
 --EXPECT--
 Hello World!

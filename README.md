@@ -39,4 +39,4 @@ Using the Extension
 A quick way of running the extension is by including the extension using the `-d`
 flag of the interpreter, for example;
 
-    php -dextension=/path/to/demo_ext.so -r 'echo demo_ext_greeting("World");'
+    php -dextension=/path/to/demo_ext.so -r 'echo greeting("World");'

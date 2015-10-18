@@ -5,6 +5,7 @@
 
 #include "php.h"
 #include "php_ini.h"
+#include "ext/standard/php_string.h"
 #include "ext/standard/info.h"
 #include "php_demo_ext.h"
 
@@ -122,7 +123,7 @@ PHP_MINFO_FUNCTION(demo_ext)
  * Simple function that take one madatory parameter and returns a string. e.g.
  * demo_ext_greeting('World') will return 'Hello World!'
  */
-PHP_FUNCTION(demo_ext_greeting)
+PHP_FUNCTION(greeting)
 {
     char *name, *output;
     int name_len, len;
@@ -137,6 +138,7 @@ PHP_FUNCTION(demo_ext_greeting)
 
     len = spprintf(&output, 0, "Hello %s!", name);
 
+    // char *converted = php_strtoupper(output, len);
     RETURN_STRINGL(output, len, 0);
 }
 /* }}} */
@@ -149,7 +151,7 @@ PHP_FUNCTION(demo_ext_greeting)
  * @param string $name who to say hello to
  * @param string $greeting the actual greeting, defaults to 'Hello'
  */
-PHP_FUNCTION(demo_ext_greeting2)
+PHP_FUNCTION(greeting_alt)
 {
     char *name,
          *greeting = NULL,  // optionals must be initialised to a default value
@@ -170,14 +172,20 @@ PHP_FUNCTION(demo_ext_greeting2)
     RETURN_STRINGL(output, len, 0);
 }
 
+PHP_FUNCTION(greeting_uppercase)
+{
+
+}
+
 /* {{{ demo_ext_functions[]
  *
  * Every user visible function must have an entry in demo_ext_functions[].
  */
 const zend_function_entry demo_ext_functions[] = {
 	PHP_FE(confirm_demo_ext_compiled,	NULL)		/* For testing, remove later. */
-    PHP_FE(demo_ext_greeting, NULL)
-    PHP_FE(demo_ext_greeting2, NULL)
+    PHP_FE(greeting, NULL)
+    PHP_FE(greeting_alt, NULL)
+    PHP_FE(greeting_uppercase, NULL)
 	PHP_FE_END	/* Must be the last line in demo_ext_functions[] */
 };
 /* }}} */
