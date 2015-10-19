@@ -7,6 +7,8 @@
 #include "php_ini.h"
 #include "ext/standard/php_string.h"
 #include "ext/standard/info.h"
+#include "ext/standard/php_standard.h"
+#include "SAPI.h"
 #include "php_demo_ext.h"
 
 /* If you declare any globals in php_demo_ext.h uncomment this:
@@ -15,6 +17,7 @@ ZEND_DECLARE_MODULE_GLOBALS(demo_ext)
 
 /* True global resources - no need for thread safety here */
 static int le_demo_ext;
+
 zend_class_entry *php_greeting_class_entry;
 
 /* {{{ PHP_INI
@@ -69,7 +72,7 @@ static void php_demo_ext_init_globals(zend_demo_ext_globals *demo_ext_globals)
 /* {{{ Greeting::__construct
  * takes an optional string parameter as the greeting prefix
  */
-PHP_FUNCTION(Greeting_Constructor)
+PHP_METHOD(Greeting, __construct)
 {
     char *prefix = "Hello";
     int prefix_len;
@@ -77,13 +80,30 @@ PHP_FUNCTION(Greeting_Constructor)
     if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|s", &prefix, &prefix_len) == FAILURE) {
         RETURN_NULL();
     }
+
+    char *prefix_property_name;
+    int prefix_property_name_len;
+
+    zend_mangle_property_name(&prefix_property_name, &prefix_property_name_len, "Greeting", 8, "prefix", sizeof("prefix")-1, 0);
+
+    // zval *this_ptr = getThis();
+    //
+    // if (!this_ptr) {
+    //     php_error_docref(NULL TSRMLS_CC, E_WARNING, "Constructor called statically");
+    //     RETURN_FALSE;
+    // }
+
+    // add_property_stringl(this_ptr, "prefix", prefix, prefix_len);
 }
 /* }}} */
 
+ZEND_BEGIN_ARG_INFO_EX(arginfo_Greeting__construct, 0, 0, 0)
+    ZEND_ARG_INFO(0, prefix)
+ZEND_END_ARG_INFO()
 
 // defines a list of methods for the Greeting class
 static zend_function_entry php_greeting_class_entry_functions[] = {
-    PHP_NAMED_FE(__construct, PHP_FN(Greeting_Constructor), NULL)
+    PHP_ME(Greeting, __construct, arginfo_Greeting__construct, ZEND_ACC_PUBLIC)
     { NULL, NULL, NULL }
 };
 
@@ -95,6 +115,10 @@ PHP_MINIT_FUNCTION(demo_ext)
     zend_class_entry ce;
     INIT_CLASS_ENTRY(ce, "Greeting", php_greeting_class_entry_functions);
     php_greeting_class_entry = zend_register_internal_class(&ce TSRMLS_CC);
+    // php_greeting_class_entry->create_object = ???
+
+    // declare a protected property for the Greeting class who's default value is "Hello"
+    zend_declare_property_string(php_greeting_class_entry, "prefix", sizeof("prefix") - 1, "Hello", ZEND_ACC_PROTECTED);
 
     return SUCCESS;
 }
